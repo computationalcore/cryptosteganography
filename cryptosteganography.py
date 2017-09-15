@@ -18,7 +18,7 @@ from Cryptodome import Random
 from stegano import lsb, tools
 
 
-class AESteganography(object):
+class CryptoSteganography(object):
     """
     Main class to handle Steganography encrypted data.
     """
@@ -92,8 +92,8 @@ def main():
     """
 
     parser = argparse.ArgumentParser(
-        prog='encrypted-steganography',
-        description="Steganography script that save/retrieve a text/file (AES 256 encrypted) inside an image."
+        prog='cryptosteganography',
+        description="A python steganography script that save/retrieve a text/file (AES 256 encrypted) inside an image."
     )
     subparsers = parser.add_subparsers(help='sub-command help', dest='command')
 
@@ -105,10 +105,10 @@ def main():
 
     group_secret = parser_save.add_mutually_exclusive_group(required=True)
     # Non binary secret message to hide
-    group_secret.add_argument("-m", dest="message",
+    group_secret.add_argument("-m",  "--message", dest="message",
                               help="Your secret message to hide (non binary).")
     # Binary secret message to hide
-    group_secret.add_argument("-f", dest="message_file",
+    group_secret.add_argument("-f",  "--file", dest="message_file",
                               help="Your secret to hide (Text or any binary file).")
 
     # Image containing the secret
@@ -119,8 +119,8 @@ def main():
     parser_retrieve = subparsers.add_parser('retrieve', help='retrieve help')
     parser_retrieve.add_argument("-i", "--input", dest="input_image_file",
                                required=True, help="Input image file.")
-    parser_retrieve.add_argument("-o", dest="retrieved_file",
-                               help="Output for the binary secret (Text or any binary file).")
+    parser_retrieve.add_argument("-o", "--output", dest="retrieved_file",
+                               help="Output for the binary secret file (Text or any binary file).")
 
     args = parser.parse_args()
 
@@ -168,9 +168,9 @@ def main():
             exit(0)
 
         # Validate password value
-        aes_steganography = None
+        crypto_steganography = None
         try:
-            aes_steganography = AESteganography(password)
+            crypto_steganography = CryptoSteganography(password)
         except Exception as error:
             print('Invalid key password format')
             print(error)
@@ -186,7 +186,7 @@ def main():
 
         # Hide and save the image
         try:
-            aes_steganography.hide(args.input_image_file, output_image_file, message)
+            crypto_steganography.hide(args.input_image_file, output_image_file, message)
         except Exception as error:
             print('Error while saving data')
             print(error)
@@ -204,9 +204,9 @@ def main():
                 break
             print('Password can\'t be empty')
 
-        aes_steganography = AESteganography(password)
+        crypto_steganography = CryptoSteganography(password)
 
-        secret = aes_steganography.retrieve(args.input_image_file)
+        secret = crypto_steganography.retrieve(args.input_image_file)
 
         if not secret:
             print('No valid data found')
@@ -217,9 +217,14 @@ def main():
             try:
                 with open(args.retrieved_file, 'wb') as f:
                     f.write(secret)
-            except Exception as error:
-                print('Error while saving output file')
-                print(error)
+            except TypeError:
+                try:
+                    with open(args.retrieved_file, 'wb') as f:
+                        f.write(secret.encode())
+                except Exception as error:
+                    print('Error while saving output file')
+                    print(error)
+                    exit(0)
             print('%s saved with success' % args.retrieved_file)
         else:
             print(secret)
