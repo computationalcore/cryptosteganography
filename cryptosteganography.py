@@ -67,6 +67,9 @@ class CryptoSteganography(object):
         """
         cypher_data = lsb.reveal(input_image_file)
 
+        if not cypher_data:
+            return None
+
         cypher_data = base64.b64decode(cypher_data)
         # Retrieve the dynamic initialization vector saved
         iv = cypher_data[:AES.block_size]
