@@ -12,6 +12,7 @@ import argparse
 import base64
 import hashlib
 import getpass
+import pkg_resources
 from Cryptodome.Cipher import AES
 from Cryptodome.Util.Padding import pad, unpad
 from Cryptodome import Random
@@ -96,8 +97,11 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog='cryptosteganography',
-        description="A python steganography script that save/retrieve a text/file (AES 256 encrypted) inside an image."
+        description="Cryptosteganography is an application to save or retrieve an encrypted message or encrypted file concealed inside an image."
     )
+
+    parser.add_argument("-v", "--version", action='version', version=pkg_resources.require("cryptosteganography")[0].version)
+
     subparsers = parser.add_subparsers(help='sub-command help', dest='command')
 
     # Sub parser: Save
@@ -231,6 +235,10 @@ def main():
             print('%s saved with success' % args.retrieved_file)
         else:
             print(secret)
+    # Print help
+    else:
+        parser.print_help()
+
 
 
 if __name__ == '__main__':
