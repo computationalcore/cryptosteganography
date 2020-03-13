@@ -62,4 +62,6 @@ docs/_build
 # Test output files
 tests/output_files/*
 # exception to the rule
-!tests/output_files/.gitkeep 
+!tests/output_files/.gitkeep
+
+output.png
