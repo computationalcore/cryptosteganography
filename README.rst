@@ -206,6 +206,13 @@ License
 This project is licensed under the MIT License - see the
 `LICENSE <https://github.com/computationalcore/cryptosteganography/blob/master/LICENSE>`_ file for details
 
+
+Authors
+-------
+
+`Vin Busquet <https://github.com/computationalcore>`_ file for details
+
+
 Limitations
 -----------
 
@@ -214,6 +221,20 @@ Limitations
    file
 -  I did not tested with all conceived file types. Feel free to
    `report <https://github.com/computationalcore/cryptosteganography/issues>`_ any bug you find
+
+
+Contributing
+-------
+
+For details, check out `CONTRIBUTING.md <https://github.com/computationalcore/cryptosteganography/blob/master/CONTRIBUTING.md>`_.
+
+
+Changelog
+-------
+
+For details, check out `CHANGELOG.md <https://github.com/computationalcore/fall-detection/blob/master/CHANGELOG.md>`_.
+
+For details, check out 
 
 Acknowledgments
 ---------------
