@@ -25,6 +25,7 @@ pip-log.txt
 
 # Unit test / coverage reports
 .coverage
+.coverage.*
 .tox
 nosetests.xml
 
@@ -49,3 +50,16 @@ DerivedData/*
 
 #Custom settings of the project
 project.settings
+.vscode/
+
+__pycache__
+htmlcov
+*.pyc
+docs/_build
+.mypy_cache
+.pytest_cache
+
+# Test output files
+tests/output_files/*
+# exception to the rule
+!tests/output_files/.gitkeep 

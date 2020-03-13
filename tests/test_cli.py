@@ -1,0 +1,495 @@
+import argparse
+import builtins
+import io
+import os
+import sys
+from unittest import mock
+
+from exitstatus import ExitStatus
+import pytest
+
+from cryptosteganography import cli
+
+INPUT_IMAGE = 'tests/assets/test_image.jpg'
+INPUT_MESSAGE_TEXT_FILE = 'tests/assets/test_file1.txt'
+INPUT_MESSAGE_TEXT_EMPTY_FILE = 'tests/assets/test_file2.txt'
+INPUT_MESSAGE_AUDIO_FILE = 'tests/assets/test_file.mp3'
+OUTPUT_IMAGE = 'tests/output_files/image_file_cli.png'
+OUTPUT_MESSAGE_FILE = 'tests/output_files/message_file_cli.txt'
+OUTPUT_MESSAGE_AUDIO_FILE = 'tests/output_files/test_file_cli.mp3'
+
+
+def patch_open(open_func, files):
+    def open_patched(
+        path,
+        mode='r',
+        buffering=-1,
+        encoding=None,
+        errors=None,
+        newline=None,
+        closefd=True,
+        opener=None
+    ):
+        if 'w' in mode and not os.path.isfile(path):
+            files.append(path)
+        return open_func(
+            path,
+            mode=mode,
+            buffering=buffering,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+            closefd=closefd,
+            opener=opener
+        )
+    return open_patched
+
+
+@pytest.fixture()
+def cleanup_files(monkeypatch):
+    """
+    Delete files created by the tests.
+    """
+    files = [
+        'output.png',
+        OUTPUT_IMAGE,
+        OUTPUT_MESSAGE_FILE,
+        OUTPUT_MESSAGE_AUDIO_FILE
+    ]
+    monkeypatch.setattr(builtins, 'open', patch_open(builtins.open, files))
+    monkeypatch.setattr(io, 'open', patch_open(io.open, files))
+    yield
+    for file in files:
+        try:
+            os.remove(file)
+        except FileNotFoundError:
+            pass
+
+
+def test_init():
+    with mock.patch.object(cli, 'main', return_value=42):
+        with mock.patch.object(cli, '__name__', '__main__'):
+            with mock.patch.object(cli.sys, 'exit') as mock_exit:
+                cli.init()
+                assert mock_exit.call_args[0][0] == 42
+
+
+def test_argparse_input_empty():
+    # calling with no arguments goes to look at sys.argv, which is our arguments to py.test.
+    with pytest.raises((SystemExit, NotImplementedError)):
+        cli.main()
+
+
+###############################
+# Save - Message String Tests #
+###############################
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='Hello World. 你好，世界!!!'
+    )
+)
+def test_save_message_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+
+    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE)
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file='',
+        message='Hello World. 你好，世界!!!'
+    )
+)
+def test_save_message_empty_output_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+
+    assert output == u'Output image output.png saved with success\n'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file='bablakjbla.png',
+        output_image_file=OUTPUT_IMAGE,
+        message='Hello. 你好，世界!!!'
+    )
+)
+def test_save_message_input_image_file_not_found_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == 'Failed: Input file bablakjbla.png not found.\n'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_MESSAGE_TEXT_FILE,
+        output_image_file=OUTPUT_IMAGE,
+        message='Hello. 你好，世界!!!'
+    )
+)
+def test_save_message_invalid_input_image_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='',
+        message_file=''
+    )
+)
+def test_save_message_empty_message_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: 'uhf8hf838fuh')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == "Failed: Message can't be empty\n"
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='Hello World. 你好，世界!!!'
+    )
+)
+def test_save_message_empty_password_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: ' ')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == "Failed: Password can't be empty\n"
+
+
+###################################
+# Retrieve - Message String Tests #
+###################################
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=OUTPUT_IMAGE,
+        retrieved_file=None
+    )
+)
+def test_retrieve_message_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+    assert output == 'Hello World. 你好，世界!!!\n'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=OUTPUT_IMAGE,
+        retrieved_file=OUTPUT_MESSAGE_FILE
+    )
+)
+def test_retrieve_message_as_file_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+    assert output == '{} saved with success\n'.format(OUTPUT_MESSAGE_FILE)
+
+    with open(OUTPUT_MESSAGE_FILE, 'rb') as f:
+        message = f.read()
+        assert message.decode('utf-8') == 'Hello World. 你好，世界!!!'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=OUTPUT_IMAGE,
+        retrieved_file=None
+    )
+)
+def test_retrieve_message_invalid_password(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: 'Wrong Password')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == 'No valid data found\n'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file='bablakjbla.png',
+        retrieved_file=None
+    )
+)
+def test_retrieve_message_input_image_file_not_found_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == 'Failed: Input file bablakjbla.png not found.\n'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=INPUT_MESSAGE_TEXT_FILE,
+        retrieved_file=None
+    )
+)
+def test_retrieve_message_invalid_input_image_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=OUTPUT_IMAGE,
+        retrieved_file=None
+    )
+)
+def test_retrieve_message_empty_password_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: ' ')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == "Failed: Password can't be empty\n"
+
+
+#############################
+# Save - Message File Tests #
+#############################
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='',
+        message_file=INPUT_MESSAGE_TEXT_FILE
+    )
+)
+def test_save_message_file_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+
+    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE)
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='',
+        message_file=INPUT_MESSAGE_AUDIO_FILE
+    )
+)
+def test_save_message_audio_file_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+
+    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE)
+
+    assert os.path.isfile(INPUT_MESSAGE_AUDIO_FILE)
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='',
+        message_file='invalid file'
+    )
+)
+def test_save_message_file_not_found_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == 'Failed: Message file invalid file not found.\n'
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE,
+        message='',
+        message_file=INPUT_MESSAGE_TEXT_EMPTY_FILE
+    )
+)
+def test_save_message_file_empty_error(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.failure
+
+    output = str(capsys.readouterr().out)
+    assert output == "Failed: Message file content can't be empty\n"
+
+
+#################################
+# Retrieve - Message File Tests #
+#################################
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=OUTPUT_IMAGE,
+        retrieved_file=OUTPUT_MESSAGE_AUDIO_FILE
+    )
+)
+def test_retrieve_message_audio_file_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+    assert output == '{} saved with success\n'.format(OUTPUT_MESSAGE_AUDIO_FILE)
+
+    # Compare if original file is equal to retrieved file
+    with open(OUTPUT_MESSAGE_AUDIO_FILE, 'rb') as audio_file:
+        output_audio = audio_file.read()
+        with open(INPUT_MESSAGE_AUDIO_FILE, 'rb') as original_audio_file:
+            original_audio = original_audio_file.read()
+            assert original_audio == output_audio
