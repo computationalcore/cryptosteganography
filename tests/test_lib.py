@@ -1,8 +1,3 @@
-
-import builtins
-import io
-import os
-
 import pytest
 
 from cryptosteganography import CryptoSteganography
@@ -12,48 +7,6 @@ INPUT_MESSAGE_TEXT_FILE = 'tests/assets/test_file1.txt'
 INPUT_MESSAGE_TEXT_EMPTY_FILE = 'tests/assets/test_file2.txt'
 INPUT_MESSAGE_AUDIO_FILE = 'tests/assets/test_file.mp3'
 OUTPUT_IMAGE = 'tests/output_files/test_image_file.png'
-
-
-def patch_open(open_func, files):
-    def open_patched(
-        path,
-        mode='r',
-        buffering=-1,
-        encoding=None,
-        errors=None,
-        newline=None,
-        closefd=True,
-        opener=None
-    ):
-        if 'w' in mode and not os.path.isfile(path):
-            files.append(path)
-        return open_func(
-            path,
-            mode=mode,
-            buffering=buffering,
-            encoding=encoding,
-            errors=errors,
-            newline=newline,
-            closefd=closefd,
-            opener=opener
-        )
-    return open_patched
-
-
-@pytest.fixture()
-def cleanup_files(monkeypatch):
-    """
-    Delete files created by the tests.
-    """
-    files = [OUTPUT_IMAGE]
-    monkeypatch.setattr(builtins, 'open', patch_open(builtins.open, files))
-    monkeypatch.setattr(io, 'open', patch_open(io.open, files))
-    yield
-    for file in files:
-        try:
-            os.remove(file)
-        except FileNotFoundError:
-            pass
 
 
 @pytest.mark.parametrize('key, secret_message, expected', [

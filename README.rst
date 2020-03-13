@@ -1,6 +1,23 @@
 Cryptosteganography
 ===================
 
+.. image:: https://travis-ci.org/Luminia/qw.svg?branch=master
+    :target: https://travis-ci.org/Luminia/qw
+.. image:: https://coveralls.io/repos/github/Luminia/qw/badge.svg?branch=master
+    :target: https://coveralls.io/github/Luminia/qw?branch=master
+.. image:: https://img.shields.io/pypi/v/cryptosteganography.svg
+    :target: https://pypi.python.org/pypi/cryptosteganography
+    :alt: Latest Version
+.. image:: https://img.shields.io/pypi/status/cryptosteganography.svg
+    :target: https://pypi.python.org/pypi/cryptosteganography
+    :alt: Development Status
+.. image:: https://img.shields.io/pypi/pyversions/cryptosteganography.svg
+    :target: https://pypi.python.org/pypi/cryptosteganography
+    :alt: Python Versions
+.. image:: https://img.shields.io/pypi/l/cryptosteganography.svg
+    :target: https://github.com/computationalcore/cryptosteganography/blob/master/LICENSE
+    :alt: License
+
 A python steganography module to store messages or files protected with
 AES-256 encryption inside an image.
 

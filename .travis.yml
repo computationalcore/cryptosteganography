@@ -23,7 +23,7 @@ matrix:
 
 install:
   # Ensure virtualenv is up to date to avoid DeprecationWarning in bundled site.py.
-  - pip install --upgrade virtualenv
+  - pip install --upgrade virtualenv setuptools tox tox-travis coveralls
   - pip install tox
 
 script:
