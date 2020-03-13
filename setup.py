@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import setuptools
-import sys
 
 
 def readme():
@@ -44,7 +43,7 @@ setuptools.setup(
     license='MIT',
     license_files=['LICENSE'],
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',

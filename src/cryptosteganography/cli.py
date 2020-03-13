@@ -11,7 +11,7 @@ import sys
 from exitstatus import ExitStatus
 import pkg_resources
 
-from cryptosteganography import CryptoSteganography
+import cryptosteganography.utils as utils
 
 __author__ = 'computationalcore@gmail.com'
 
@@ -96,6 +96,78 @@ def parse_args(parse_this=None) -> argparse.Namespace:
     return parser.parse_args(parse_this)
 
 
+def _save_parse_input(args):
+    message = None
+    error = None
+    password = None
+    output_image_file = None
+
+    if args.message:
+        message = args.message
+    elif args.message_file:
+        message, error = utils.get_data_from_file(args.message_file)
+
+    # Validate message
+    if not message and not error:
+        error = "Failed: Message can't be empty"
+    elif not error:
+        # Get password (the string used to derivate the encryption key)
+        password = getpass.getpass('Enter the key password: ').strip()
+        if len(password) == 0:
+            error = "Failed: Password can't be empty"
+
+    return (message, error, password, output_image_file)
+
+
+def _handle_save_action(args) -> ExitStatus:
+    """"Save secret in file action."""
+    message, error, password, output_image_file = _save_parse_input(args)
+
+    if not error:
+        output_image_file = utils.get_output_image_filename(args.output_image_file)
+
+        # Hide message and save the image
+        error = utils.save_output_image(
+            password,
+            args.input_image_file,
+            message,
+            output_image_file
+        )
+
+    if not error:
+        print('Output image %s saved with success' % output_image_file)
+        return ExitStatus.success
+
+    print(error)
+    return ExitStatus.failure
+
+
+def _handle_retrieve_action(args) -> ExitStatus:
+    """"Retrieve secret from file action."""
+    secret = None
+    error = None
+    password = None
+
+    # Get password (the string used to derive the encryption key)
+    password = getpass.getpass('Enter the key password: ').strip()
+    if len(password) == 0:
+        error = "Failed: Password can't be empty"
+
+    if not error:
+        secret, error = utils.get_secret_from_image(password, args.input_image_file)
+
+    # Print or save to a file the data
+    if not error and args.retrieved_file:
+        secret = utils.save_secret_file(secret, args.retrieved_file)
+
+    if not error:
+        print(secret)
+        return ExitStatus.success
+
+    print(error)
+    return ExitStatus.failure
+
+
 def main() -> ExitStatus:
     """
     Accept arguments and run the script.
@@ -106,105 +178,10 @@ def main() -> ExitStatus:
 
     # Save action
     if args.command == 'save':
-
-        message = b''
-        if args.message:
-            message = args.message
-        elif args.message_file:
-            try:
-                with open(args.message_file, 'rb', encoding='utf-8') as f:
-                    message = f.read()
-            except Exception:
-                try:
-                    # Try to read as binary if failed as utf-8 encoded string based file
-                    with open(args.message_file, 'rb') as f:
-                        message = f.read()
-                except FileNotFoundError:
-                    print('Failed: Message file %s not found.' % args.message_file)
-                    return ExitStatus.failure
-            if message == b'':
-                print("Failed: Message file content can't be empty")
-                return ExitStatus.failure
-
-        # Validate message
-        if not message:
-            print("Failed: Message can't be empty")
-            return ExitStatus.failure
-
-        # Get password (the string used to derivate the encryption key)
-        password = getpass.getpass('Enter the key password: ').strip()
-        if len(password) == 0:
-            print("Failed: Password can't be empty")
-            return ExitStatus.failure
-
-        password_confirmation = ''
-        password_confirmation = getpass.getpass(prompt='Confirm the key password: ').strip()
-        if password_confirmation != password:
-            print("Failed: Password Confirmation doesn't match Password")
-            return ExitStatus.failure
-
-        crypto_steganography = CryptoSteganography(password)
-
-        output_image_file = args.output_image_file
-        if not output_image_file:
-            output_image_file = 'output.png'
-        else:
-            # If output image doesn't have png suffix or is in other format, force png append
-            if output_image_file[-4:].lower() != '.png':
-                output_image_file += '.png'
-
-        # Hide and save the image
-        try:
-            crypto_steganography.hide(args.input_image_file, output_image_file, message)
-        except FileNotFoundError:
-            print('Failed: Input file %s not found.' % args.input_image_file)
-            return ExitStatus.failure
-        except OSError as error:
-            # It can be invalid file format
-            print('Failed: %s' % error)
-            return ExitStatus.failure
-
-        print('Output image %s saved with success' % output_image_file)
+        return _handle_save_action(args)
 
     # Retrieve action
-    elif args.command == 'retrieve':
-        # Get password (the string used to derive the encryption key)
-        password = getpass.getpass('Enter the key password: ').strip()
-        if len(password) == 0:
-            print("Failed: Password can't be empty")
-            return ExitStatus.failure
-
-        crypto_steganography = CryptoSteganography(password)
-
-        secret = None
-        try:
-            secret = crypto_steganography.retrieve(args.input_image_file)
-        except FileNotFoundError:
-            print('Failed: Input file %s not found.' % args.input_image_file)
-            return ExitStatus.failure
-        except OSError as error:
-            # It can be invalid file format
-            print(error)
-            return ExitStatus.failure
-
-        if not secret:
-            print('No valid data found')
-            return ExitStatus.failure
-
-        # Print or save to a file the data
-        if args.retrieved_file:
-            try:
-                with open(args.retrieved_file, 'wb') as f:
-                    f.write(secret)
-            except TypeError:
-                with open(args.retrieved_file, 'wb') as f:
-                    f.write(secret.encode())
-
-            print('%s saved with success' % args.retrieved_file)
-        else:
-            print(secret)
-
-    return ExitStatus.success
+    return _handle_retrieve_action(args)
 
 
 def init():

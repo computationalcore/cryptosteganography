@@ -9,14 +9,19 @@ from exitstatus import ExitStatus
 import pytest
 
 from cryptosteganography import cli
+from cryptosteganography.utils import get_output_image_filename
 
 INPUT_IMAGE = 'tests/assets/test_image.jpg'
 INPUT_MESSAGE_TEXT_FILE = 'tests/assets/test_file1.txt'
 INPUT_MESSAGE_TEXT_EMPTY_FILE = 'tests/assets/test_file2.txt'
 INPUT_MESSAGE_AUDIO_FILE = 'tests/assets/test_file.mp3'
 OUTPUT_IMAGE = 'tests/output_files/image_file_cli.png'
+OUTPUT_IMAGE_JPG_EXPECTED = 'tests/output_files/image_file_cli_other.jpg'
 OUTPUT_MESSAGE_FILE = 'tests/output_files/message_file_cli.txt'
 OUTPUT_MESSAGE_AUDIO_FILE = 'tests/output_files/test_file_cli.mp3'
+
+# The cli change any change output format to PNG
+OUTPUT_IMAGE_JPG_REAL = get_output_image_filename(OUTPUT_IMAGE_JPG_EXPECTED)
 
 
 def patch_open(open_func, files):
@@ -53,6 +58,7 @@ def cleanup_files(monkeypatch):
     files = [
         'output.png',
         OUTPUT_IMAGE,
+        OUTPUT_IMAGE_JPG_REAL,
         OUTPUT_MESSAGE_FILE,
         OUTPUT_MESSAGE_AUDIO_FILE
     ]
@@ -436,7 +442,7 @@ def test_save_message_file_not_found_error(mock_args, monkeypatch, capsys) -> No
     assert pytest_wrapped_e.value.code == ExitStatus.failure
 
     output = str(capsys.readouterr().out)
-    assert output == 'Failed: Message file invalid file not found.\n'
+    assert output == 'Failed: File invalid file not found.\n'
 
 
 @mock.patch(
@@ -493,3 +499,53 @@ def test_retrieve_message_audio_file_success(mock_args, monkeypatch, capsys) -> 
         with open(INPUT_MESSAGE_AUDIO_FILE, 'rb') as original_audio_file:
             original_audio = original_audio_file.read()
             assert original_audio == output_audio
+
+
+#######################################
+# Save/Retrieve - JPG output expected #
+#######################################
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='save',
+        input_image_file=INPUT_IMAGE,
+        output_image_file=OUTPUT_IMAGE_JPG_EXPECTED,
+        message='Hello World. 你好，世界!!!'
+    )
+)
+def test_save_message_jpg_output_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: 'Test，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+
+    # Note: The output format is png
+    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE_JPG_REAL)
+
+
+@mock.patch(
+    'argparse.ArgumentParser.parse_args',
+    return_value=argparse.Namespace(
+        command='retrieve',
+        input_image_file=OUTPUT_IMAGE_JPG_REAL,
+        retrieved_file=None
+    )
+)
+def test_retrieve_message_jpg_success(mock_args, monkeypatch, capsys) -> None:
+    # Pasword prompt
+    monkeypatch.setattr('getpass.getpass', lambda prompt: 'Test，世界')
+
+    # Call CLI
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        sys.exit(cli.main())
+    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.value.code == ExitStatus.success
+
+    output = str(capsys.readouterr().out)
+    assert output == 'Hello World. 你好，世界!!!\n'
