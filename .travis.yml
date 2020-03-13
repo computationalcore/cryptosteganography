@@ -1,0 +1,33 @@
+language: python
+
+# Required for Python 3.7+.
+#   See: https://github.com/travis-ci/travis-ci/issues/9069#issuecomment-425720905
+dist: xenial
+
+matrix:
+    include:
+        - python: 3.5
+          env: TOXENV=py35
+        - python: 3.6
+          env: TOXENV=py36
+        - python: 3.7
+          env: TOXENV=py37
+        - python: 3.8
+          env: TOXENV=py38
+        - python: 3.8
+          env: TOXENV=pep8
+        - python: 3.8
+          env: TOXENV=mypy
+        - python: 3.8
+          env: TOXENV=docs
+
+install:
+  # Ensure virtualenv is up to date to avoid DeprecationWarning in bundled site.py.
+  - pip install --upgrade virtualenv
+  - pip install tox
+
+script:
+  tox
+
+after_success:
+  - coveralls

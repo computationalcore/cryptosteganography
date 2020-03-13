@@ -4,13 +4,13 @@
 #
 #    pip-compile
 #
-colorama==0.4.3           # via crayons
+colorama==0.4.2           # via crayons
 crayons==0.3.0            # via stegano
 exitstatus==1.4.0         # via -r requirements.in
 piexif==1.1.3             # via stegano
 pillow==6.2.2             # via stegano
 pycryptodomex==3.9.7      # via -r requirements.in
-stegano==0.9.8            # via -r requirements.in
+stegano==0.9.7            # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

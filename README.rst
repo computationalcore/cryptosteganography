@@ -224,17 +224,16 @@ Limitations
 
 
 Contributing
--------
+------------
 
 For details, check out `CONTRIBUTING.md <https://github.com/computationalcore/cryptosteganography/blob/master/CONTRIBUTING.md>`_.
 
 
 Changelog
--------
+---------
 
-For details, check out `CHANGELOG.md <https://github.com/computationalcore/fall-detection/blob/master/CHANGELOG.md>`_.
+For details, check out `CHANGELOG.md <https://github.com/computationalcore/cryptosteganography/blob/master/CHANGELOG.md>`_.
 
-For details, check out 
 
 Acknowledgments
 ---------------
