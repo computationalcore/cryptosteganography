@@ -1,10 +1,16 @@
 Cryptosteganography
 ===================
 
-.. image:: https://travis-ci.org/Luminia/qw.svg?branch=master
-    :target: https://travis-ci.org/Luminia/qw
-.. image:: https://coveralls.io/repos/github/Luminia/qw/badge.svg?branch=master
-    :target: https://coveralls.io/github/Luminia/qw?branch=master
+.. image:: https://travis-ci.org/computationalcore/cryptosteganography.svg?branch=master
+    :target: https://travis-ci.org/computationalcore/cryptosteganography
+.. image:: https://codecov.io/github/computationalcore/cryptosteganography/coverage.svg?branch=master
+    :target: https://codecov.io/gh/computationalcore/cryptosteganography
+.. image:: https://img.shields.io/lgtm/alerts/g/computationalcore/cryptosteganography.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/computationalcore/cryptosteganography/alerts/
+.. image:: https://img.shields.io/lgtm/grade/python/g/computationalcore/cryptosteganography.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/computationalcore/cryptosteganography/context:python
+.. image:: https://api.codeclimate.com/v1/badges/1f8d04f4badc720d0eda/maintainability
+   :target: https://codeclimate.com/github/computationalcore/cryptosteganography/maintainability
 .. image:: https://img.shields.io/pypi/v/cryptosteganography.svg
     :target: https://pypi.python.org/pypi/cryptosteganography
     :alt: Latest Version
