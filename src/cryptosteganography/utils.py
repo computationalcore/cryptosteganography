@@ -6,6 +6,9 @@ __author__ = 'computationalcore@gmail.com'
 
 
 def get_data_from_file(file_path: str) -> Tuple[Optional[bytes], Optional[str]]:
+    """
+    Get binary data from a file path.
+    """
     data = None
     error = None
     try:
@@ -25,6 +28,9 @@ def get_secret_from_image(
     password: Optional[str],
     file_path: str
 ) -> Tuple[Optional[bytes], Optional[str]]:
+    """
+    Get the secret hided inside an image file (if any).
+    """
     secret = None
     error = None
 
@@ -45,6 +51,10 @@ def get_secret_from_image(
 
 
 def get_output_image_filename(output_image_file: str) -> str:
+    """
+    Return the output filename from the an expected file name
+    (the lib only support PNG files as output format)
+    """
     if not output_image_file:
         output_image_file = 'output.png'
     else:
@@ -61,6 +71,9 @@ def save_output_image(
     message: Optional[bytes],
     output_image_file: str
 ) -> Optional[str]:
+    """
+    Save the output image with secret data inside.
+    """
 
     crypto_steganography = CryptoSteganography(password)
 
@@ -77,6 +90,9 @@ def save_output_image(
 
 
 def save_secret_file(secret, retrieved_file):
+    """
+    Save the secret data from bunary to file.
+    """
     try:
         with open(retrieved_file, 'wb') as f:
             f.write(secret)

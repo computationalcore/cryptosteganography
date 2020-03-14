@@ -97,9 +97,9 @@ def parse_args(parse_this=None) -> argparse.Namespace:
 
 
 def _save_parse_input(args):
+    """Parse input args of save action"""
     message = None
     error = None
-    password = None
     output_image_file = None
 
     if args.message:
@@ -110,18 +110,18 @@ def _save_parse_input(args):
     # Validate message
     if not message and not error:
         error = "Failed: Message can't be empty"
-    elif not error:
-        # Get password (the string used to derivate the encryption key)
-        password = getpass.getpass('Enter the key password: ').strip()
-        if len(password) == 0:
-            error = "Failed: Password can't be empty"
 
-    return (message, error, password, output_image_file)
+    return (message, error, output_image_file)
 
 
 def _handle_save_action(args) -> ExitStatus:
     """"Save secret in file action."""
-    message, error, password, output_image_file = _save_parse_input(args)
+    message, error, output_image_file = _save_parse_input(args)
+
+    # Get password (the string used to derivate the encryption key)
+    password = getpass.getpass('Enter the key password: ').strip()
+    if len(password) == 0:
+        error = "Failed: Password can't be empty"
 
     if not error:
         output_image_file = utils.get_output_image_filename(args.output_image_file)
