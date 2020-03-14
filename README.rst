@@ -5,8 +5,6 @@ Cryptosteganography
     :target: https://travis-ci.org/computationalcore/cryptosteganography
 .. image:: https://codecov.io/github/computationalcore/cryptosteganography/coverage.svg?branch=master
     :target: https://codecov.io/gh/computationalcore/cryptosteganography
-.. image:: https://img.shields.io/lgtm/alerts/g/computationalcore/cryptosteganography.svg?logo=lgtm&logoWidth=18
-    :target: https://lgtm.com/projects/g/computationalcore/cryptosteganography/alerts/
 .. image:: https://img.shields.io/lgtm/grade/python/g/computationalcore/cryptosteganography.svg?logo=lgtm&logoWidth=18
     :target: https://lgtm.com/projects/g/computationalcore/cryptosteganography/context:python
 .. image:: https://api.codeclimate.com/v1/badges/1f8d04f4badc720d0eda/maintainability
@@ -20,9 +18,6 @@ Cryptosteganography
 .. image:: https://img.shields.io/pypi/pyversions/cryptosteganography.svg
     :target: https://pypi.python.org/pypi/cryptosteganography
     :alt: Python Versions
-.. image:: https://img.shields.io/pypi/l/cryptosteganography.svg
-    :target: https://github.com/computationalcore/cryptosteganography/blob/master/LICENSE
-    :alt: License
 
 A python steganography module to store messages or files protected with
 AES-256 encryption inside an image.
