@@ -23,11 +23,12 @@ matrix:
 
 install:
   # Ensure virtualenv is up to date to avoid DeprecationWarning in bundled site.py.
-  - pip install --upgrade virtualenv setuptools tox tox-travis coveralls
-  - pip install tox
+  - pip install --upgrade virtualenv
+  - pip install tox travis-tox
+  - if [ "$TRAVIS_PYTHON_VERSION" = "3.7" ]; then pip install -r requirements.txt -r dev-requirements.txt; fi
 
 script:
-  tox
+  - tox
 
 after_success:
-  - coveralls
+  - if [ "$TRAVIS_PYTHON_VERSION" = "3.7" ]; then codecov; fi
