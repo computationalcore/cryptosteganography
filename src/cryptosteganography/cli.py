@@ -16,8 +16,8 @@ import cryptosteganography.utils as utils
 __author__ = 'computationalcore@gmail.com'
 
 
-def parse_args(parse_this=None) -> argparse.Namespace:
-    """Parse user command line arguments."""
+def get_parser(parse_this=None) -> argparse.ArgumentParser:
+    """Get parser for user command line arguments."""
     parser = argparse.ArgumentParser(
         prog='cryptosteganography',
         description="""
@@ -93,7 +93,7 @@ def parse_args(parse_this=None) -> argparse.Namespace:
         help='Output for the binary secret file (Text or any binary file).'
     )
 
-    return parser.parse_args(parse_this)
+    return parser
 
 
 def _save_parse_input(args):
@@ -174,14 +174,18 @@ def main() -> ExitStatus:
 
     :return:
     """
-    args = parse_args()
+    parser = get_parser()
+    args = parser.parse_args()
 
-    # Save action
     if args.command == 'save':
+        # Save action
         return _handle_save_action(args)
-
-    # Retrieve action
-    return _handle_retrieve_action(args)
+    elif args.command == 'retrieve':
+        # Retrieve action
+        return _handle_retrieve_action(args)
+    else:
+        parser.print_help()
+        return ExitStatus.failure
 
 
 def init():
