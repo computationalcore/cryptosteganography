@@ -9,7 +9,7 @@ def readme():
 
 setuptools.setup(
     name='cryptosteganography',
-    version='0.8.1',
+    version='0.8.2',
     py_modules=['cryptosteganography'],
     description='A python steganography module to store messages or files protected with AES-256 encryption inside an image.',
     long_description=readme(),

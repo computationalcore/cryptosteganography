@@ -189,8 +189,7 @@ Use as a python program
 .. code:: bash
 
     $ cryptosteganography save -i 4824157.png -m "My secret message..." -o output.png
-    Enter the key password: 
-    Confirm the key password: 
+    Enter the key password:
     Output image output.png saved with success
 
 **Retrieve message example**
@@ -206,8 +205,7 @@ Use as a python program
 .. code:: bash
 
     $ cryptosteganography save -i input_image_name.jpg -f duck_logo.pem -o output_file.png
-    Enter the key password: 
-    Confirm the key password: 
+    Enter the key password:
     Output image output_file.png saved with success
 
 **Retrieve file example**
@@ -237,6 +235,7 @@ Limitations
 -  Only works with python 3
 -  It does not work if the conceived file is greater than original input
    file
+- Ouput image is limited to PNG format only.
 -  I did not tested with all conceived file types. Feel free to
    `report <https://github.com/computationalcore/cryptosteganography/issues>`_ any bug you find
 
