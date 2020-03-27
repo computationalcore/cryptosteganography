@@ -5,8 +5,6 @@ Cryptosteganography
     :target: https://travis-ci.org/computationalcore/cryptosteganography
 .. image:: https://codecov.io/github/computationalcore/cryptosteganography/coverage.svg?branch=master
     :target: https://codecov.io/gh/computationalcore/cryptosteganography
-.. image:: https://img.shields.io/lgtm/grade/python/g/computationalcore/cryptosteganography.svg?logo=lgtm&logoWidth=18
-    :target: https://lgtm.com/projects/g/computationalcore/cryptosteganography/context:python
 .. image:: https://api.codeclimate.com/v1/badges/1f8d04f4badc720d0eda/maintainability
    :target: https://codeclimate.com/github/computationalcore/cryptosteganography/maintainability
 .. image:: https://img.shields.io/pypi/v/cryptosteganography.svg
