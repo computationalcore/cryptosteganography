@@ -67,7 +67,7 @@ pycodestyle==2.5.0
     #   flake8-import-order
 pyflakes==2.1.1
     # via flake8
-pygments==2.6.1
+pygments==2.7.4
     # via sphinx
 pyparsing==2.4.6
     # via packaging
