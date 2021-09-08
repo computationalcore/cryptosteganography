@@ -12,7 +12,7 @@ exitstatus==1.4.0
     # via -r requirements.in
 piexif==1.1.3
     # via stegano
-pillow==8.2.0
+pillow==8.3.2
     # via stegano
 pycryptodomex==3.9.7
     # via -r requirements.in
