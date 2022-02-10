@@ -233,7 +233,7 @@ Limitations
 -  Only works with python 3
 -  It does not work if the conceived file is greater than original input
    file
-- Ouput image is limited to PNG format only.
+- Output image is limited to PNG format only.
 -  I did not tested with all conceived file types. Feel free to
    `report <https://github.com/computationalcore/cryptosteganography/issues>`_ any bug you find
 
