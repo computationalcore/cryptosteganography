@@ -1,12 +1,10 @@
-Contributing
-=============
+# Contributing
 
-This guidelines exposes to any contributor how install the development enviroment, the project architecture and code style.
+This guidelines exposes to any contributor how install the development environment, the project architecture and code style.
 
-Requirements
-------------
+## Requirements
 
-Python 3.2+.
+Python 3.9+.
 
 > **note**
 >
@@ -16,8 +14,7 @@ Python 3.2+.
 > both. As a result, support for Python 2.7 in this example project has
 > been dropped.
 
-Windows Support
----------------
+## Windows Support
 
 Summary: On Windows, use `py` instead of `python3` for many of the
 examples in this documentation.
@@ -31,8 +28,7 @@ typically access Python through the
 platforms operate the same and use a `python` link to access the Python
 version used in that virtual environment.
 
-Installation
-------------
+## Installation
 
 To install and run the program without development environment folloe
 the instruction
@@ -41,30 +37,27 @@ Create and start the virtual environment (Check section "Virtual
 Environments" for more details) 
 
 ```bash
-$ python3 -m venv venv
-
-$ source venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 ```
 
 Install the requirements
 
 ```bash
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 To execute the cli (example)
 
-
-Packaging
----------
+## Packaging
 
 This project is designed as a Python package, meaning that it can be
 bundled up and redistributed as a single compressed file.
 
 Packaging is configured by:
 
--   `setup.py`
--   `MANIFEST.in`
+- `setup.py`
+- `MANIFEST.in`
 
 ### Source Distribution
 
@@ -72,20 +65,19 @@ To package the project as a [source
 distribution](https://docs.python.org/3/distutils/sourcedist.html):
 
 ``` bash
-$ python3 setup.py sdist
+python3 setup.py sdist
 ```
 
 This will generate `dist/cryptosteganography-0.0.1.tar.gz`.
 
-Dependencies
-------------
+## Dependencies
 
 Dependencies are defined in:
 
--   `requirements.in`
--   `requirements.txt`
--   `dev-requirements.in`
--   `dev-requirements.txt`
+- `requirements.in`
+- `requirements.txt`
+- `dev-requirements.in`
+- `dev-requirements.txt`
 
 ### Virtual Environments
 
@@ -97,15 +89,15 @@ packages from interfering with other Python projects on your system.
 On \*Nix:
 
 ``` {.sourceCode .bash}
-$ python3 -m venv venv
-$ source venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 ```
 
 On Windows `cmd`:
 
 ``` bash
-> py -m venv venv
-> venv\Scripts\activate.bat
+py -m venv venv
+venv\Scripts\activate.bat
 ```
 
 Once activated, it is good practice to update `pip` to the latest
@@ -145,8 +137,7 @@ To cleanly install your dependencies into your virtual environment:
 (venv) $ pip-sync requirements.txt dev-requirements.txt
 ```
 
-Testing
--------
+## Testing
 
 Automated testing is performed using
 [tox](https://tox.readthedocs.io/en/latest/index.html). tox will
@@ -169,10 +160,10 @@ become the defacto Python unit testing framework. Some key advantages
 over the built in
 [unittest](https://docs.python.org/3/library/unittest.html) module are:
 
-1.  Significantly less boilerplate needed for tests.
-2.  PEP8 compliant names (e.g. `pytest.raises()` instead of
+1. Significantly less boilerplate needed for tests.
+2. PEP8 compliant names (e.g. `pytest.raises()` instead of
     `self.assertRaises()`).
-3.  Vibrant ecosystem of plugins.
+3. Vibrant ecosystem of plugins.
 
 pytest will automatically discover and run tests by recursively
 searching for folders and `.py` files prefixed with `test` for any
@@ -207,15 +198,14 @@ using [flake8](http://flake8.pycqa.org/). flake8 is configured in the
 `[flake8]` section of `tox.ini`. Three extra flake8 plugins are also
 included:
 
--   `pep8-naming`: Ensure functions, classes, and variables are named
+- `pep8-naming`: Ensure functions, classes, and variables are named
     with correct casing.
--   `flake8-quotes`: Ensure that `' '` style string quoting is used
+- `flake8-quotes`: Ensure that `' '` style string quoting is used
     consistently.
--   `flake8-import-order`: Ensure consistency in the way imports are
+- `flake8-import-order`: Ensure consistency in the way imports are
     grouped and sorted.
 
-Project Structure
------------------
+## Project Structure
 
 Traditionally, Python projects place the source for their packages in
 the root of the project structure, like:
@@ -244,13 +234,13 @@ thereby catching any errors in packaging and installation scripts, which
 are common. Having the Python packages in the project root subverts this
 isolation for two reasons:
 
-1.  Calling `python` in the project root (for example,
+1. Calling `python` in the project root (for example,
     `python -m pytest tests/`) [causes Python to add the current working
     directory](https://docs.pytest.org/en/latest/pythonpath.html#invoking-pytest-versus-python-m-pytest)
     (the project root) to `sys.path`, which Python uses to find modules.
     Because the source package `cryptosteganography` is in the project root, it
     shadows the `cryptosteganography` package installed in the tox environment.
-2.  Calling `pytest` directly anywhere that it can find the tests will
+2. Calling `pytest` directly anywhere that it can find the tests will
     also add the project root to `sys.path` if the `tests` folder is a a
     Python package (that is, it contains a `__init__.py` file). [pytest
     adds all folders containing
@@ -261,11 +251,11 @@ isolation for two reasons:
 In order to properly test the project, the source packages must not be
 on the Python path. To prevent this, there are three possible solutions:
 
-1.  Remove the `__init__.py` file from `tests` and run `pytest` directly
+1. Remove the `__init__.py` file from `tests` and run `pytest` directly
     as a tox command.
-2.  Remove the `__init__.py` file from tests and change the working
+2. Remove the `__init__.py` file from tests and change the working
     directory of `python -m pytest` to `tests`.
-3.  Move the source packages to a dedicated `src` folder.
+3. Move the source packages to a dedicated `src` folder.
 
 The dedicated `src` directory is the [recommended
 solution](https://docs.pytest.org/en/latest/pythonpath.html#test-modules-conftest-py-files-inside-packages)
