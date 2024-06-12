@@ -277,3 +277,29 @@ Our issue templates are located in the `.github/ISSUE_TEMPLATE` directory. When 
 When submitting a pull request, please use the provided template. This ensures that you include all relevant information about the changes you are proposing, the testing done, and the impact on the project. The template includes checkboxes for you to confirm that you have followed the contribution guidelines.
 
 - Template File: `.github/PULL_REQUEST_TEMPLATE.md`
+
+### Continuous Integration Workflow
+
+Our project uses GitHub Actions for continuous integration. The workflow is defined in the `.github/workflows/python-package.yml` file. This workflow runs on every push and pull request to the `main` and `develop` branches. It ensures that our codebase remains stable and meets quality standards across different Python versions (3.9, 3.10, 3.11, 3.12).
+
+**Workflow File:** `.github/workflows/python-package.yml`
+
+**Workflow Details:**
+
+- **Name:** Python Package CI
+- **Triggers:** 
+  - On push to `main` and `develop` branches
+  - On pull request to `main` and `develop` branches
+
+- **Jobs:**
+  - **Build:** Runs on `ubuntu-latest`
+    - Matrix strategy to test multiple Python versions
+    - Steps:
+      1. Checkout the repository
+      2. Set up Python
+      3. Install dependencies
+      4. Run tests using `pytest`, `mypy`, and `flake8`
+      5. Generate documentation using `sphinx`
+      6. Upload coverage to Codecov (for Python 3.9)
+
+This setup ensures that all code changes are thoroughly tested and meet the project's standards before being merged.
