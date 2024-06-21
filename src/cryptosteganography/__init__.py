@@ -1,10 +1,11 @@
 import base64
 import hashlib
-
 from Cryptodome import Random
 from Cryptodome.Cipher import AES
 from Cryptodome.Util.Padding import pad, unpad
 from stegano import lsb
+from PIL import UnidentifiedImageError, Image
+import os
 
 __author__ = 'computationalcore@gmail.com'
 
@@ -59,7 +60,10 @@ class CryptoSteganography(object):
         :param input_image_file: Input image file path
         :return:
         """
-        cypher_data = lsb.reveal(input_image_file)
+        try:
+            cypher_data = lsb.reveal(input_image_file)
+        except (UnidentifiedImageError, FileNotFoundError, IndexError):
+            return None
 
         if not cypher_data:
             return None

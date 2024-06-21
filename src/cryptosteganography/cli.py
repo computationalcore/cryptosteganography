@@ -9,7 +9,7 @@ import getpass
 import sys
 
 from exitstatus import ExitStatus
-import pkg_resources
+from importlib.metadata import version, PackageNotFoundError
 
 import cryptosteganography.utils as utils
 
@@ -30,7 +30,7 @@ def get_parser(parse_this=None) -> argparse.ArgumentParser:
         '-v',
         '--version',
         action='version',
-        version=pkg_resources.require('cryptosteganography')[0].version
+        version=get_package_version('cryptosteganography')
     )
 
     subparsers = parser.add_subparsers(help='sub-command help', dest='command')
@@ -96,11 +96,18 @@ def get_parser(parse_this=None) -> argparse.ArgumentParser:
     return parser
 
 
+def get_package_version(package_name):
+    """Get the version of the package."""
+    try:
+        return version(package_name)
+    except PackageNotFoundError:
+        return 'Unknown'
+
+
 def _save_parse_input(args):
     """Parse input args of save action"""
     message = None
     error = None
-    output_image_file = None
 
     if args.message:
         message = args.message
@@ -111,16 +118,16 @@ def _save_parse_input(args):
     if not message and not error:
         error = "Failed: Message can't be empty"
 
-    return (message, error, output_image_file)
+    return message, error
 
 
 def _handle_save_action(args) -> ExitStatus:
-    """"Save secret in file action."""
-    message, error, output_image_file = _save_parse_input(args)
+    """Save secret in file action."""
+    message, error = _save_parse_input(args)
 
-    # Get password (the string used to derivate the encryption key)
+    # Get password (the string used to derive the encryption key)
     password = getpass.getpass('Enter the key password: ').strip()
-    if len(password) == 0:
+    if not password:
         error = "Failed: Password can't be empty"
 
     if not error:
@@ -135,7 +142,7 @@ def _handle_save_action(args) -> ExitStatus:
         )
 
     if not error:
-        print('Output image %s saved with success' % output_image_file)
+        print(f'Output image {output_image_file} saved with success')
         return ExitStatus.success
 
     print(error)
@@ -143,14 +150,12 @@ def _handle_save_action(args) -> ExitStatus:
 
 
 def _handle_retrieve_action(args) -> ExitStatus:
-    """"Retrieve secret from file action."""
-    secret = None
+    """Retrieve secret from file action."""
     error = None
-    password = None
 
     # Get password (the string used to derive the encryption key)
     password = getpass.getpass('Enter the key password: ').strip()
-    if len(password) == 0:
+    if not password:
         error = "Failed: Password can't be empty"
 
     if not error:
@@ -169,19 +174,13 @@ def _handle_retrieve_action(args) -> ExitStatus:
 
 
 def main() -> ExitStatus:
-    """
-    Accept arguments and run the script.
-
-    :return:
-    """
+    """Accept arguments and run the script."""
     parser = get_parser()
     args = parser.parse_args()
 
     if args.command == 'save':
-        # Save action
         return _handle_save_action(args)
     elif args.command == 'retrieve':
-        # Retrieve action
         return _handle_retrieve_action(args)
     else:
         parser.print_help()
@@ -189,9 +188,7 @@ def main() -> ExitStatus:
 
 
 def init():
-    """
-    Allow the script to be run standalone
-    """
+    """Allow the script to be run standalone."""
     if __name__ == '__main__':
         sys.exit(main())
 
