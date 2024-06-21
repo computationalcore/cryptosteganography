@@ -28,20 +28,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r dev-requirements.txt
+          pip install tox tox-gh-actions
 
-      - name: Run tests
-        run: |
-          pytest
-          mypy src
-          flake8 src tests
+      - name: Run tests with tox
+        run: tox
 
       - name: Generate documentation
+        if: matrix.python-version == '3.9'
         run: |
-          sphinx-apidoc --force --output-dir docs/apidoc src/cryptosteganography
-          sphinx-build -a -W docs docs/_build
+          tox -e docs
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.9'
-        run: codecov
+        run: |
+          codecov
