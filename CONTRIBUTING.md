@@ -100,9 +100,11 @@ source venv/bin/activate
 On Windows `cmd`:
 
 ```bash
-py -m venv venv
-venv\Scripts\activate.bat
+py -m venv venv # Activate the virtual environment
+venv\Scripts\activate.bat # On newer systems, you might only need to run 'venv\Scripts\activate' (without .bat)
 ```
+
+Check if the terminal prompt changes to indicate the virtual environment is active (e.g., (venv) will appear in the terminal prompt)
 
 Once activated, it is good practice to update `pip` to the latest version:
 

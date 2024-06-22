@@ -77,7 +77,7 @@ Usage
 -----
 
 Use as a library in a Python program
-'''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''
 
 **Store a message string inside an image**
 

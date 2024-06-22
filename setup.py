@@ -4,7 +4,7 @@ import setuptools
 
 
 def readme():
-    with open('README.rst') as f:
+    with open('README.rst', encoding='utf-8') as f:
         return f.read()
 
 setuptools.setup(
@@ -13,8 +13,10 @@ setuptools.setup(
     py_modules=['cryptosteganography'],
     description='A python steganography module to store messages or files protected with AES-256 encryption inside an image.',
     long_description=readme(),
+    long_description_content_type='text/x-rst',
 
     url='https://github.com/computationalcore/cryptosteganography',
+    author='Vin Busquet',
     author_email='computationalcore@gmail.com',
 
     packages=setuptools.find_packages('src'),
@@ -37,7 +39,7 @@ setuptools.setup(
     # For VCS dependencies, use pip >= 19 and the PEP 508 syntax.
     #   Example: 'requests @ git+https://github.com/requests/requests.git@branch_or_tag'
     #   See: https://github.com/pypa/pip/issues/6162
-    install_requires=open('requirements.txt').readlines(),
+    install_requires=[line.strip() for line in open('requirements.txt').readlines()],
     zip_safe=False,
 
     license='MIT',
