@@ -1,8 +1,8 @@
 Cryptosteganography
 ===================
 
-.. image:: https://github.com/computationalcore/cryptosteganography/actions/workflows/build.yml/badge.svg?branch=main
-   :target: https://github.com/computationalcore/cryptosteganography/actions/workflows/build.yml
+.. image:: https://github.com/computationalcore/cryptosteganography/actions/workflows/ci.yml/badge.svg?branch=main
+   :target: https://github.com/computationalcore/cryptosteganography/actions/workflows/ci.yml
 
 .. image:: https://codecov.io/github/computationalcore/cryptosteganography/coverage.svg?branch=main
    :target: https://codecov.io/gh/computationalcore/cryptosteganography
