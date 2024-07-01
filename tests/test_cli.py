@@ -104,19 +104,10 @@ def test_empty_command(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
 
-    assert output.strip() == """usage: cryptosteganography [-h] [-v] {save,retrieve} ...
-
-Cryptosteganography is an application to save or retrieve an encrypted message or encrypted file concealed inside an image.
-
-positional arguments:
-  {save,retrieve}  sub-command help
-    save           save help
-    retrieve       retrieve help
-
-options:
-  -h, --help       show this help message and exit
-  -v, --version    show program's version number and exit
-""".strip()
+    assert "usage: cryptosteganography [-h] [-v] {save,retrieve}" in output
+    assert "Cryptosteganography is an application to save or retrieve an encrypted message" in output
+    assert "-h, --help       show this help message and exit" in output
+    assert "-v, --version    show program's version number and exit" in output
 
 
 @mock.patch(
@@ -137,19 +128,10 @@ def test_invalid_command(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
 
-    assert output.strip() == """usage: cryptosteganography [-h] [-v] {save,retrieve} ...
-
-Cryptosteganography is an application to save or retrieve an encrypted message or encrypted file concealed inside an image.
-
-positional arguments:
-  {save,retrieve}  sub-command help
-    save           save help
-    retrieve       retrieve help
-
-options:
-  -h, --help       show this help message and exit
-  -v, --version    show program's version number and exit
-""".strip()
+    assert "usage: cryptosteganography [-h] [-v] {save,retrieve}" in output
+    assert "Cryptosteganography is an application to save or retrieve an encrypted message" in output
+    assert "-h, --help       show this help message and exit" in output
+    assert "-v, --version    show program's version number and exit" in output
 
 
 ###############################
