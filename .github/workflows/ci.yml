@@ -38,6 +38,11 @@ jobs:
         run: |
           tox -e docs
 
+      - name: Install Codecov
+        if: matrix.python-version == '3.9'
+        run: |
+          pip install codecov
+
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.9'
         run: |
