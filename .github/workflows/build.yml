@@ -45,5 +45,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.9'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          codecov
+          codecov -t ${{ secrets.CODECOV_TOKEN }}
