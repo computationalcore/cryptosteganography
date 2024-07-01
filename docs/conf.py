@@ -2,7 +2,7 @@
 #
 # Configuration file for the Sphinx documentation builder.
 #
-# This file does only contain a selection of the most common options. For a
+# This file only contains a selection of the most common options. For a
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
 
@@ -20,13 +20,13 @@ sys.path.insert(0, os.path.abspath('../src'))
 # -- Project information -----------------------------------------------------
 
 project = 'cryptosteganography'
-copyright = ''
+copyright = '2024'
 author = 'Vin Busquet'
 
 # The short X.Y version
-version = ''
+version = '0.8'
 # The full version, including alpha/beta/rc tags
-release = ''
+release = '0.8.2'
 
 
 # -- General configuration ---------------------------------------------------
@@ -50,7 +50,7 @@ extensions = [
 templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
-# You can specify multiple suffix as a list of string:
+# You can specify multiple suffixes as a list of strings:
 #
 # source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
@@ -62,8 +62,8 @@ master_doc = 'index'
 # for a list of supported languages.
 #
 # This is also used if you do content translation via gettext catalogs.
-# Usually you set "language" from the command line for these cases.
-language = None
+# Usually, you set "language" from the command line for these cases.
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -71,13 +71,13 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = 'sphinx'
 
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
+# a list of built-in themes.
 #
 html_theme = 'alabaster'
 
@@ -86,20 +86,19 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    # Override the default alabaster line wrap, which wraps tightly at 940px.
     'page_width': 'auto',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
+# relative to this directory. They are copied after the built-in static files,
+# so a file named "default.css" will overwrite the built-in "default.css".
 html_static_path = ['_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #
 # The default sidebars (for documents that don't match any pattern) are
-# defined by theme itself.  Builtin themes are using these templates by
+# defined by the theme itself.  Built-in themes are using these templates by
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
@@ -109,7 +108,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'adoc'
+htmlhelp_basename = 'cryptosteganographydoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -136,8 +135,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'a.tex', 'a Documentation',
-     'a', 'manual'),
+    (master_doc, 'cryptosteganography.tex', 'cryptosteganography Documentation',
+     'Vin Busquet', 'manual'),
 ]
 
 
@@ -146,7 +145,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'a', 'a Documentation',
+    (master_doc, 'cryptosteganography', 'cryptosteganography Documentation',
      [author], 1)
 ]
 
@@ -157,8 +156,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'a', 'a Documentation',
-     author, 'a', 'One line description of project.',
+    (master_doc, 'cryptosteganography', 'cryptosteganography Documentation',
+     author, 'cryptosteganography', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -168,7 +167,7 @@ texinfo_documents = [
 # Bibliographic Dublin Core info.
 epub_title = project
 
-# The unique identifier of the text. This can be a ISBN number
+# The unique identifier of the text. This can be an ISBN number
 # or the project homepage.
 #
 # epub_identifier = ''

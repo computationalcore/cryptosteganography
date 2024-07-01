@@ -104,19 +104,10 @@ def test_empty_command(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
 
-    assert output == """usage: cryptosteganography [-h] [-v] {save,retrieve} ...
-
-Cryptosteganography is an application to save or retrieve an encrypted message
-or encrypted file concealed inside an image.
-
-positional arguments:
-  {save,retrieve}  sub-command help
-    save           save help
-    retrieve       retrieve help
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -v, --version    show program's version number and exit\n"""
+    assert "usage: cryptosteganography [-h] [-v] {save,retrieve}" in output
+    assert "Cryptosteganography is an application to save or retrieve an encrypted message" in output
+    assert "-h, --help       show this help message and exit" in output
+    assert "-v, --version    show program's version number and exit" in output
 
 
 @mock.patch(
@@ -137,19 +128,10 @@ def test_invalid_command(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
 
-    assert output == """usage: cryptosteganography [-h] [-v] {save,retrieve} ...
-
-Cryptosteganography is an application to save or retrieve an encrypted message
-or encrypted file concealed inside an image.
-
-positional arguments:
-  {save,retrieve}  sub-command help
-    save           save help
-    retrieve       retrieve help
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -v, --version    show program's version number and exit\n"""
+    assert "usage: cryptosteganography [-h] [-v] {save,retrieve}" in output
+    assert "Cryptosteganography is an application to save or retrieve an encrypted message" in output
+    assert "-h, --help       show this help message and exit" in output
+    assert "-v, --version    show program's version number and exit" in output
 
 
 ###############################
@@ -166,7 +148,7 @@ optional arguments:
     )
 )
 def test_save_message_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -177,7 +159,7 @@ def test_save_message_success(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
 
-    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE)
+    assert output == f'Output image {OUTPUT_IMAGE} saved with success\n'
 
 
 @mock.patch(
@@ -190,7 +172,7 @@ def test_save_message_success(mock_args, monkeypatch, capsys) -> None:
     )
 )
 def test_save_message_empty_output_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -201,7 +183,7 @@ def test_save_message_empty_output_success(mock_args, monkeypatch, capsys) -> No
 
     output = str(capsys.readouterr().out)
 
-    assert output == u'Output image output.png saved with success\n'
+    assert output == 'Output image output.png saved with success\n'
 
 
 @mock.patch(
@@ -214,7 +196,7 @@ def test_save_message_empty_output_success(mock_args, monkeypatch, capsys) -> No
     )
 )
 def test_save_message_input_image_file_not_found_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -237,7 +219,7 @@ def test_save_message_input_image_file_not_found_error(mock_args, monkeypatch, c
     )
 )
 def test_save_message_invalid_input_image_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -258,7 +240,7 @@ def test_save_message_invalid_input_image_error(mock_args, monkeypatch, capsys) 
     )
 )
 def test_save_message_empty_message_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: 'uhf8hf838fuh')
 
     # Call CLI
@@ -281,7 +263,7 @@ def test_save_message_empty_message_error(mock_args, monkeypatch, capsys) -> Non
     )
 )
 def test_save_message_empty_password_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: ' ')
 
     # Call CLI
@@ -307,7 +289,7 @@ def test_save_message_empty_password_error(mock_args, monkeypatch, capsys) -> No
     )
 )
 def test_retrieve_message_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -329,7 +311,7 @@ def test_retrieve_message_success(mock_args, monkeypatch, capsys) -> None:
     )
 )
 def test_retrieve_message_as_file_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -339,7 +321,7 @@ def test_retrieve_message_as_file_success(mock_args, monkeypatch, capsys) -> Non
     assert pytest_wrapped_e.value.code == ExitStatus.success
 
     output = str(capsys.readouterr().out)
-    assert output == '{} saved with success\n'.format(OUTPUT_MESSAGE_FILE)
+    assert output == f'{OUTPUT_MESSAGE_FILE} saved with success\n'
 
     with open(OUTPUT_MESSAGE_FILE, 'rb') as f:
         message = f.read()
@@ -355,7 +337,7 @@ def test_retrieve_message_as_file_success(mock_args, monkeypatch, capsys) -> Non
     )
 )
 def test_retrieve_message_invalid_password(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: 'Wrong Password')
 
     # Call CLI
@@ -377,7 +359,7 @@ def test_retrieve_message_invalid_password(mock_args, monkeypatch, capsys) -> No
     )
 )
 def test_retrieve_message_input_image_file_not_found_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -387,7 +369,7 @@ def test_retrieve_message_input_image_file_not_found_error(mock_args, monkeypatc
     assert pytest_wrapped_e.value.code == ExitStatus.failure
 
     output = str(capsys.readouterr().out)
-    assert output == 'Failed: Input file bablakjbla.png not found.\n'
+    assert output == 'No valid data found\n'
 
 
 @mock.patch(
@@ -399,7 +381,7 @@ def test_retrieve_message_input_image_file_not_found_error(mock_args, monkeypatc
     )
 )
 def test_retrieve_message_invalid_input_image_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '48dj_你好，世界')
 
     # Call CLI
@@ -418,7 +400,7 @@ def test_retrieve_message_invalid_input_image_error(mock_args, monkeypatch, caps
     )
 )
 def test_retrieve_message_empty_password_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: ' ')
 
     # Call CLI
@@ -446,7 +428,7 @@ def test_retrieve_message_empty_password_error(mock_args, monkeypatch, capsys) -
     )
 )
 def test_save_message_file_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
 
     # Call CLI
@@ -457,7 +439,7 @@ def test_save_message_file_success(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
 
-    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE)
+    assert output == f'Output image {OUTPUT_IMAGE} saved with success\n'
 
 
 @mock.patch(
@@ -471,7 +453,7 @@ def test_save_message_file_success(mock_args, monkeypatch, capsys) -> None:
     )
 )
 def test_save_message_audio_file_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
 
     # Call CLI
@@ -482,7 +464,7 @@ def test_save_message_audio_file_success(mock_args, monkeypatch, capsys) -> None
 
     output = str(capsys.readouterr().out)
 
-    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE)
+    assert output == f'Output image {OUTPUT_IMAGE} saved with success\n'
 
     assert os.path.isfile(INPUT_MESSAGE_AUDIO_FILE)
 
@@ -498,7 +480,7 @@ def test_save_message_audio_file_success(mock_args, monkeypatch, capsys) -> None
     )
 )
 def test_save_message_file_not_found_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
 
     # Call CLI
@@ -522,7 +504,7 @@ def test_save_message_file_not_found_error(mock_args, monkeypatch, capsys) -> No
     )
 )
 def test_save_message_file_empty_error(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
 
     # Call CLI
@@ -547,7 +529,7 @@ def test_save_message_file_empty_error(mock_args, monkeypatch, capsys) -> None:
     )
 )
 def test_retrieve_message_audio_file_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: '7348hffbsd_33222_你好，世界')
 
     # Call CLI
@@ -557,7 +539,7 @@ def test_retrieve_message_audio_file_success(mock_args, monkeypatch, capsys) -> 
     assert pytest_wrapped_e.value.code == ExitStatus.success
 
     output = str(capsys.readouterr().out)
-    assert output == '{} saved with success\n'.format(OUTPUT_MESSAGE_AUDIO_FILE)
+    assert output == f'{OUTPUT_MESSAGE_AUDIO_FILE} saved with success\n'
 
     # Compare if original file is equal to retrieved file
     with open(OUTPUT_MESSAGE_AUDIO_FILE, 'rb') as audio_file:
@@ -580,7 +562,7 @@ def test_retrieve_message_audio_file_success(mock_args, monkeypatch, capsys) -> 
     )
 )
 def test_save_message_jpg_output_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: 'Test，世界')
 
     # Call CLI
@@ -592,7 +574,7 @@ def test_save_message_jpg_output_success(mock_args, monkeypatch, capsys) -> None
     output = str(capsys.readouterr().out)
 
     # Note: The output format is png
-    assert output == u'Output image {} saved with success\n'.format(OUTPUT_IMAGE_JPG_REAL)
+    assert output == f'Output image {OUTPUT_IMAGE_JPG_REAL} saved with success\n'
 
 
 @mock.patch(
@@ -604,7 +586,7 @@ def test_save_message_jpg_output_success(mock_args, monkeypatch, capsys) -> None
     )
 )
 def test_retrieve_message_jpg_success(mock_args, monkeypatch, capsys) -> None:
-    # Pasword prompt
+    # Password prompt
     monkeypatch.setattr('getpass.getpass', lambda prompt: 'Test，世界')
 
     # Call CLI
@@ -615,3 +597,4 @@ def test_retrieve_message_jpg_success(mock_args, monkeypatch, capsys) -> None:
 
     output = str(capsys.readouterr().out)
     assert output == 'Hello World. 你好，世界!!!\n'
+

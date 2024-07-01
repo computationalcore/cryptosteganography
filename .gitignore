@@ -52,6 +52,7 @@ DerivedData/*
 project.settings
 .vscode/
 
+coverage.xml
 __pycache__
 htmlcov
 *.pyc
