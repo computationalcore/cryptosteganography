@@ -2,7 +2,7 @@ name: Publish Python Package
 
 on:
   workflow_run:
-    workflows: ["Python Package CI"]
+    workflows: ["CI Build and Tests"]
     types:
       - completed
 

@@ -1,4 +1,4 @@
-name: Python Package CI
+name: CI Build and Tests
 
 on:
   push:
